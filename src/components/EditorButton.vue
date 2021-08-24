@@ -3,6 +3,7 @@
 		class="editor-button"
 		v-html="item.icon"
 		@click="runAction"
+		:title="item.label"
 	/>
 
 </template>

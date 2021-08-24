@@ -44,6 +44,28 @@ function listItem(raw: string): string {
 		: `${raw}\r\n- `;
 }
 
+function checkListItem(raw: string): string {
+	return editor.selected()
+		? formatter.prependString(raw, '- [ ]')
+		: `${raw}\r\n- [ ] `;
+}
+
+function blockQuote(raw: string): string {
+	return editor.selected()
+		? formatter.prependString(raw, '> ')
+		: `${raw} \r\n >`;
+}
+
+function codeBlock(raw: string): string {
+	if (editor.selected()) {
+		return formatter.wrapString(raw, '```');
+	}
+	// Formatted like this so it displays correctly
+	return `${raw}\`\`\` 
+	
+\`\`\`\r\n`.trim();
+}
+
 const elements = {
 	bold,
 	italics,
@@ -52,6 +74,9 @@ const elements = {
 	h3,
 	h4,
 	listItem,
+	checkListItem,
+	blockQuote,
+	codeBlock,
 };
 
 export default elements;

@@ -12,9 +12,7 @@
 		</div>
 		<div id="markdown-preview" v-if="preview" v-html="markdown" />
 		<textarea id="markdown-editor" v-if="!preview" v-model="data.raw"/>
-		<div id="markdown-footer">
-
-		</div>
+		<div id="markdown-footer"></div>
 	</div>
 </template>
 <script lang="ts">
