@@ -2,12 +2,17 @@
 <template>
 	<div id="markdown-container">
 		<div id="markdown-header">
-			<editor-button @click="setBold" icon="bold" />
-			<editor-button @click="setItalic" icon="italic" />
-			<editor-button @click="togglePreview" icon="preview" />
+			<editor-button
+				v-for="(item, key) in toolbarItems"
+				:key="key"
+				:action="item.action"
+				:icon="item.icon"
+				v-model="data"
+			/>
+			<editor-button :value="{}" :action="togglePreview" :icon="previewIcon" />
 		</div>
-		<div id="markdown-preview" v-if="preview" v-html="html" />
-		<textarea id="markdown-editor" v-if="!preview" v-model="raw"/>
+		<div id="markdown-preview" v-if="preview" v-html="markdown" />
+		<textarea id="markdown-editor" v-if="!preview" v-model="data.raw"/>
 		<div id="markdown-footer"></div>
 	</div>
 </template>
@@ -15,49 +20,30 @@
 
 import Vue from 'vue';
 import marked from 'marked';
-import SelectedText from '@/types/selected-text';
 import EditorButton from '@/components/EditorButton.vue';
+import elements from '@/services/elements';
+import toolbarMenu from '@/services/toolbar';
 
 export default Vue.extend({
 	components: { EditorButton },
 	data(): {
-		markdownEditor: null | HTMLTextAreaElement,
-		raw: string,
-		html: string,
+		data: {
+			raw: string,
+		},
 		preview: boolean
 		} {
 		return {
-			markdownEditor: null,
-			raw: '',
-			html: '',
+			data: {
+				raw: '',
+			},
+			toolbarItems: null,
 			preview: false,
 		};
 	},
 	methods: {
-		setBold(): void {
-			const selectedText = this.getSelectedText();
-			if (selectedText) {
-				this.raw = ` ${this.raw.substring(0, selectedText.start)}**${selectedText.text}**${this.raw.substring(selectedText.end)} `;
-				return;
-			}
-			this.raw += '\r\n**  **\r\n';
-		},
 		setItalic(): void {
 			// this.raw += `\r\n*  *\r\n`;
 			console.log(this.getSelectedText());
-		},
-		getSelectedText(): SelectedText | null {
-			const selectionStart = this.markdownEditor!.selectionStart as number;
-			const selectionEnd = this.markdownEditor!.selectionEnd as number;
-			if (selectionStart === selectionEnd) {
-				return null;
-			}
-
-			return {
-				start: selectionStart,
-				end: selectionEnd,
-				text: this.markdownEditor!.value.substring(selectionStart, selectionEnd).replace(/\n/g, ' '),
-			};
 		},
 		togglePreview() {
 			this.preview = !this.preview;
@@ -65,11 +51,17 @@ export default Vue.extend({
 	},
 	computed: {
 		markdown(): string {
-			return marked(this.raw);
+			return marked(this.data.raw);
+		},
+		elements() {
+			return elements;
+		},
+		previewIcon() {
+			return '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M24 23h-24v-22h24v22zm-23-16v15h22v-15h-22zm22-1v-4h-22v4h22z"/></svg>';
 		},
 	},
-	mounted(): void {
-		this.markdownEditor = document.getElementById('markdown-editor') as HTMLTextAreaElement;
+	created() {
+		this.toolbarItems = toolbarMenu.load();
 	},
 });
 </script>
