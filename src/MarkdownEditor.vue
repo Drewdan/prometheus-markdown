@@ -5,15 +5,16 @@
 			<editor-button
 				v-for="(item, key) in toolbarItems"
 				:key="key"
-				:action="item.action"
-				:icon="item.icon"
+				:item="item"
 				v-model="data"
 			/>
-			<editor-button :value="{}" :action="togglePreview" :icon="previewIcon" />
+			<editor-button :value="{}" :item="previewItem" />
 		</div>
 		<div id="markdown-preview" v-if="preview" v-html="markdown" />
 		<textarea id="markdown-editor" v-if="!preview" v-model="data.raw"/>
-		<div id="markdown-footer"></div>
+		<div id="markdown-footer">
+
+		</div>
 	</div>
 </template>
 <script lang="ts">
@@ -41,10 +42,6 @@ export default Vue.extend({
 		};
 	},
 	methods: {
-		setItalic(): void {
-			// this.raw += `\r\n*  *\r\n`;
-			console.log(this.getSelectedText());
-		},
 		togglePreview() {
 			this.preview = !this.preview;
 		},
@@ -56,12 +53,28 @@ export default Vue.extend({
 		elements() {
 			return elements;
 		},
-		previewIcon() {
-			return '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M24 23h-24v-22h24v22zm-23-16v15h22v-15h-22zm22-1v-4h-22v4h22z"/></svg>';
+		previewItem() {
+			return {
+				action: this.togglePreview,
+				label: 'Toggle Preview',
+				icon: '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M24 23h-24v-22h24v22zm-23-16v15h22v-15h-22zm22-1v-4h-22v4h22z"/></svg>',
+			};
 		},
 	},
 	created() {
 		this.toolbarItems = toolbarMenu.load();
+		window.addEventListener('keydown', (event: KeyboardEvent) => {
+			if (this.preview) {
+				return;
+			}
+			if ((event.ctrlKey && event.key === 'b') || (event.ctrlKey && event.altKey && event.key === 'b')) {
+				this.data.raw = elements.bold(this.data.raw);
+			}
+
+			if ((event.ctrlKey && event.key === 'i') || (event.ctrlKey && event.altKey && event.key === 'i')) {
+				this.data.raw = elements.italics(this.data.raw);
+			}
+		});
 	},
 });
 </script>

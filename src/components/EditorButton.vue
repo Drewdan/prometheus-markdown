@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="editor-button"
-		v-html="icon"
+		v-html="item.icon"
 		@click="runAction"
 	/>
 
@@ -9,15 +9,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import ToolbarItem from '@/types/toolbar-item';
 
 export default Vue.extend({
 	props: {
-		icon: {
+		item: {
 			required: true,
-			type: String,
-		},
-		action: {
-			required: false,
+			type: ToolbarItem,
 		},
 		value: {
 			required: true,
@@ -27,7 +25,7 @@ export default Vue.extend({
 	methods: {
 		runAction() {
 			const data = {
-				raw: this.action(this.value.raw),
+				raw: this.item.action(this.value.raw),
 			};
 			if (Object.keys(this.value).length) {
 				this.$emit('input', data);
