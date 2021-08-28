@@ -10,8 +10,10 @@
 			/>
 			<editor-button :value="{}" :item="previewItem" />
 		</div>
-		<div id="markdown-preview" v-if="preview" v-html="markdown" />
-		<textarea id="markdown-editor" v-if="!preview" v-model="data.raw"/>
+		<div style="height: 100vh; display: flex; flex-direction: row">
+			<textarea id="markdown-editor" class="side-align" v-if="!preview" v-model="data.raw"/>
+			<div id="markdown-preview" class="side-align" v-if="!preview" v-html="markdown" />
+		</div>
 		<div id="markdown-footer"></div>
 	</div>
 </template>
@@ -22,6 +24,7 @@ import marked from 'marked';
 import EditorButton from '@/components/EditorButton.vue';
 import elements from '@/services/elements';
 import toolbarMenu from '@/services/toolbar';
+import ToolbarItem from '@/types/toolbar-item';
 
 export default Vue.extend({
 	components: { EditorButton },
@@ -29,7 +32,9 @@ export default Vue.extend({
 		data: {
 			raw: string,
 		},
-		preview: boolean
+		preview: boolean,
+		toolbarItems: null | ToolbarItem[],
+		live: boolean,
 		} {
 		return {
 			data: {
@@ -37,6 +42,7 @@ export default Vue.extend({
 			},
 			toolbarItems: null,
 			preview: false,
+			live: false,
 		};
 	},
 	methods: {
@@ -48,10 +54,10 @@ export default Vue.extend({
 		markdown(): string {
 			return marked(this.data.raw);
 		},
-		elements() {
-			return elements;
-		},
-		previewItem() {
+		// elements() {
+		// 	return elements;
+		// },
+		previewItem(): any {
 			return {
 				action: this.togglePreview,
 				label: 'Toggle Preview',
@@ -59,7 +65,7 @@ export default Vue.extend({
 			};
 		},
 	},
-	created() {
+	created(): void {
 		this.toolbarItems = toolbarMenu.load();
 		window.addEventListener('keydown', (event: KeyboardEvent) => {
 			if (this.preview) {
@@ -100,11 +106,11 @@ html, body {
 #markdown-editor {
 	flex: auto;
 	border: 0;
-	outline: none;
 	resize: none;
 	font-family: Arial, serif;
 	line-height: 1.5;
 	padding: 10px;
+	outline: 1px solid #ccc;
 }
 
 #markdown-preview {
@@ -120,5 +126,9 @@ html, body {
 #markdown-footer {
 	height: 25px;
 	background-color: #ccc;
+}
+
+.side-align {
+	width: 50vw;
 }
 </style>

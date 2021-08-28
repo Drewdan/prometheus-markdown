@@ -16,7 +16,7 @@ export default Vue.extend({
 	props: {
 		item: {
 			required: true,
-			type: ToolbarItem,
+			type: Object as () => ToolbarItem,
 		},
 		value: {
 			required: true,
@@ -24,9 +24,9 @@ export default Vue.extend({
 		},
 	},
 	methods: {
-		runAction() {
+		runAction(): void {
 			const data = {
-				raw: this.item.action(this.value.raw),
+				raw: this?.item.action(this?.value.raw),
 			};
 			if (Object.keys(this.value).length) {
 				this.$emit('input', data);
