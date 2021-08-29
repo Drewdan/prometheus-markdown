@@ -1,6 +1,6 @@
 {
   "name": "prometheus-markdown",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "A simple markdown editor for Vue 2",
   "author": "Andrew Arscott",
@@ -61,7 +61,8 @@
       ],
       "no-tabs": "off",
       "no-extra-semi": "warn",
-      "semi": "warn"
+      "semi": "warn",
+      "max-len": "warn"
     }
   },
   "browserslist": [

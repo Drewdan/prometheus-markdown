@@ -46,14 +46,13 @@ export default Vue.extend({
 }
 
 .editor-button svg {
-	height: calc(40px - 20px);
-	margin: 5px;
 	padding: 5px;
+	margin: 8px 5px 2px;
 }
 
 .text-button {
 	font-family: "Arial", serif;
-	font-size: 20pt;
 	padding: 5px;
+	margin: 8px 5px 2px;
 }
 </style>

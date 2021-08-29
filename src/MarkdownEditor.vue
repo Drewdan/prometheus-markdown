@@ -8,11 +8,11 @@
 				:item="item"
 				v-model="data"
 			/>
-			<editor-button :value="{}" :item="previewItem" />
+			<editor-button :value="{}" :item="previewItem"/>
 		</div>
-		<div style="height: 100vh; display: flex; flex-direction: row">
-			<textarea id="markdown-editor" class="side-align" v-if="!preview" v-model="data.raw"/>
-			<div id="markdown-preview" class="side-align" v-if="!preview" v-html="markdown" />
+		<div style="min-height: 400px; display: flex; flex-direction: row">
+			<textarea id="markdown-editor" :name="name" class="side-align" v-if="!preview" v-model="data.raw"/>
+			<div id="markdown-preview" class="side-align" v-if="preview" v-html="markdown"/>
 		</div>
 		<div id="markdown-footer"></div>
 	</div>
@@ -28,6 +28,17 @@ import ToolbarItem from '@/types/toolbar-item';
 
 export default Vue.extend({
 	components: { EditorButton },
+	props: {
+		name: {
+			required: true,
+			type: String,
+		},
+		value: {
+			required: false,
+			type: String,
+			default: () => '',
+		},
+	},
 	data(): {
 		data: {
 			raw: string,
@@ -38,7 +49,7 @@ export default Vue.extend({
 		} {
 		return {
 			data: {
-				raw: '',
+				raw: this.value,
 			},
 			toolbarItems: null,
 			preview: false,
@@ -46,7 +57,7 @@ export default Vue.extend({
 		};
 	},
 	methods: {
-		togglePreview() {
+		togglePreview(): void {
 			this.preview = !this.preview;
 		},
 	},
@@ -54,15 +65,12 @@ export default Vue.extend({
 		markdown(): string {
 			return marked(this.data.raw);
 		},
-		// elements() {
-		// 	return elements;
-		// },
-		previewItem(): any {
+		previewItem(): ToolbarItem {
 			return {
 				action: this.togglePreview,
 				label: 'Toggle Preview',
 				icon: '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M24 23h-24v-22h24v22zm-23-16v15h22v-15h-22zm22-1v-4h-22v4h22z"/></svg>',
-			};
+			} as unknown as ToolbarItem;
 		},
 	},
 	created(): void {
@@ -83,18 +91,15 @@ export default Vue.extend({
 });
 </script>
 <style>
-html, body {
-	height: 100vh;
-	width: 100vw;
-	padding: 0;
-	margin: 0;
+*, ::before, ::after {
+	box-sizing: border-box;
 }
 </style>
 <style scoped>
 #markdown-container {
 	display: flex;
 	flex-direction: column;
-	height: 100vh;
+	height: 100%;
 }
 
 #markdown-header {
@@ -105,22 +110,23 @@ html, body {
 
 #markdown-editor {
 	flex: auto;
-	border: 0;
 	resize: none;
 	font-family: Arial, serif;
 	line-height: 1.5;
 	padding: 10px;
-	outline: 1px solid #ccc;
+	border: 1px solid #ccc;
+	width: 100%;
+	outline: none;
 }
 
 #markdown-preview {
 	flex: auto;
-	border: 0;
-	outline: none;
 	resize: none;
 	font-family: Arial, serif;
 	line-height: 1.5;
 	padding: 10px;
+	border: 1px solid #ccc;
+	width: 100%;
 }
 
 #markdown-footer {
