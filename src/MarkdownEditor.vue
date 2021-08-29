@@ -11,10 +11,12 @@
 			<editor-button :value="{}" :item="previewItem"/>
 		</div>
 		<div style="min-height: 400px; display: flex; flex-direction: row">
-			<textarea id="markdown-editor" :name="name" class="side-align" v-if="!preview" v-model="data.raw"/>
-			<div id="markdown-preview" class="side-align" v-if="preview" v-html="markdown"/>
+			<textarea id="markdown-editor" :name="name" class="side-align" v-show="!preview" v-model="data.raw"/>
+			<div id="markdown-preview" class="side-align" v-show="preview" v-html="markdown"/>
 		</div>
-		<div id="markdown-footer"></div>
+		<div id="markdown-footer">
+			<div id="word-count">Word Count: <span v-text="wordCount" /></div>
+		</div>
 	</div>
 </template>
 <script lang="ts">
@@ -71,6 +73,9 @@ export default Vue.extend({
 				label: 'Toggle Preview',
 				icon: '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M24 23h-24v-22h24v22zm-23-16v15h22v-15h-22zm22-1v-4h-22v4h22z"/></svg>',
 			} as unknown as ToolbarItem;
+		},
+		wordCount(): number {
+			return this.data.raw.length ? this.data.raw.split(' ').length : 0;
 		},
 	},
 	created(): void {
@@ -132,6 +137,15 @@ export default Vue.extend({
 #markdown-footer {
 	height: 25px;
 	background-color: #ccc;
+}
+
+#word-count {
+	display: block;
+	line-height: 25px;
+	font-family: Arial, serif;
+	float: right;
+	font-size: 10pt;
+	margin-right: 10px;
 }
 
 .side-align {
