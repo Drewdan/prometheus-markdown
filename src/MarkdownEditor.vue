@@ -80,10 +80,9 @@ export default Vue.extend({
 		loadFilePrompt(): void {
 			(this.$refs.imageUpload! as HTMLInputElement).click();
 		},
-		handleSelectedFile(event): void {
-			const { files } = event.target;
+		uploadFile(files: File) {
 			const formData = new FormData();
-			formData.append('file', files[0]);
+			formData.append('file', files);
 			axios.post(this.uploadUrl, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
@@ -93,6 +92,10 @@ export default Vue.extend({
 					// data will contain the filename
 					this.data.raw = elements.image(this.data.raw, data.url);
 				});
+		},
+		handleSelectedFile(event): void {
+			const { files } = event.target;
+			this.uploadFile(files[0]);
 		},
 	},
 	computed: {
@@ -119,6 +122,13 @@ export default Vue.extend({
 	},
 	created(): void {
 		this.toolbarItems = toolbarMenu.load();
+		document.addEventListener('paste', (event) => {
+			const file = event.clipboardData?.files[0];
+			if (!file) {
+				return;
+			}
+			this.uploadFile(file);
+		});
 		window.addEventListener('keydown', (event: KeyboardEvent) => {
 			if (this.preview) {
 				return;
