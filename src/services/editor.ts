@@ -7,9 +7,9 @@ function get(): HTMLTextAreaElement {
 function selected(): SelectedText | null {
 	const selectionStart = get().selectionStart as number;
 	const selectionEnd = get().selectionEnd as number;
-	if (selectionStart === selectionEnd) {
-		return null;
-	}
+	// if (selectionStart === selectionEnd) {
+	// 	return null;
+	// }
 
 	return {
 		start: selectionStart,

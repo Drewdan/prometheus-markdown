@@ -12,7 +12,9 @@ function prependString(raw: string, format: string): string {
 }
 
 function image(raw: string, url: string): string {
-	return `${raw}\r\n![Image Description!](${url})`;
+	const selectedText = editor.selected() as SelectedText;
+	return `${raw.substring(0, selectedText.start)}![Image Description!](${url})${raw.substring(selectedText.end)}` as string;
+	// return `${raw}\r\n![Image Description!](${url})`;
 }
 
 const formatter = {

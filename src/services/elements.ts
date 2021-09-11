@@ -1,28 +1,17 @@
-import editor from '@/services/editor';
 import formatter from '@/services/formatter';
 
 function bold(raw: string): string {
-	if (editor.selected()) {
-		return formatter.wrapString(raw, '**');
-	}
-	return `${raw}\r\n**  **\r\n`;
+	return formatter.wrapString(raw, '**');
 }
 
 function italics(raw: string): string {
-	if (editor.selected()) {
-		return formatter.wrapString(raw, '*');
-	}
-	return `${raw}\r\n*  *\r\n`;
+	return formatter.wrapString(raw, '*');
 }
 function header(raw: string, level: number): string {
-	if (editor.selected()) {
-		return formatter.prependString(raw, '#'.repeat(level));
-	}
-
-	return `${raw}\r\n${'#'.repeat(level)} `;
+	return formatter.prependString(raw, '#'.repeat(level));
 }
 
-function image(raw: string, url: string) {
+function image(raw: string, url: string): string {
 	return formatter.image(raw, url);
 }
 
@@ -43,31 +32,19 @@ function h4(raw: string): string {
 }
 
 function listItem(raw: string): string {
-	return editor.selected()
-		? formatter.prependString(raw, '- ')
-		: `${raw}\r\n- `;
+	return formatter.prependString(raw, '- ');
 }
 
 function checkListItem(raw: string): string {
-	return editor.selected()
-		? formatter.prependString(raw, '- [ ]')
-		: `${raw}\r\n- [ ] `;
+	return formatter.prependString(raw, '- [ ]');
 }
 
 function blockQuote(raw: string): string {
-	return editor.selected()
-		? formatter.prependString(raw, '> ')
-		: `${raw} \r\n >`;
+	return formatter.prependString(raw, '> ');
 }
 
 function codeBlock(raw: string): string {
-	if (editor.selected()) {
-		return formatter.wrapString(raw, '```');
-	}
-	// Formatted like this so it displays correctly
-	return `${raw}\`\`\` 
-	
-\`\`\`\r\n`.trim();
+	return formatter.wrapString(raw, '```');
 }
 
 const elements = {

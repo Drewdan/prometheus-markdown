@@ -153,8 +153,6 @@ export default Vue.extend({
 *, ::before, ::after {
 	box-sizing: border-box;
 }
-</style>
-<style scoped>
 #markdown-container {
 	display: flex;
 	flex-direction: column;
@@ -186,6 +184,12 @@ export default Vue.extend({
 	padding: 10px;
 	border: 1px solid #ccc;
 	width: 100%;
+}
+
+#markdown-preview p img {
+	width: 98%;
+	margin: 10px 1%;
+	height: auto;
 }
 
 #markdown-footer {
