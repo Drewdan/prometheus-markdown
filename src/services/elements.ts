@@ -22,6 +22,10 @@ function header(raw: string, level: number): string {
 	return `${raw}\r\n${'#'.repeat(level)} `;
 }
 
+function image(raw: string, url: string) {
+	return formatter.image(raw, url);
+}
+
 function h1(raw: string): string {
 	return header(raw, 1);
 }
@@ -77,6 +81,7 @@ const elements = {
 	checkListItem,
 	blockQuote,
 	codeBlock,
+	image,
 };
 
 export default elements;
